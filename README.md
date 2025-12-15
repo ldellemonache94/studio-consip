@@ -11,7 +11,7 @@ Questo repository contiene lo script di inizializzazione `inizio.sh`. Segui ques
 **Opzione cloning HTTPS:**
 
 ```
-git clone https://<nome_utente>github.com/tuo-utente/tuo-repo.git
+git clone https://<nome_utente>@github.com/tuo-utente/tuo-repo.git
 ```
 ### Vi verrà richiestra la password del vostro account per far partire il clone
 
@@ -35,8 +35,7 @@ git push -u origin feature/nome-branch  # Pusha e configura tracking
 ## Note Importanti
 
 - Sostituisci `tuo-utente/tuo-repo.git` con l'URL reale
-- Per SSH: configura chiave SSH in GitHub Settings > SSH keys
-- Per HTTPS: usa Personal Access Token come password
+- Per HTTPS: si può anche usare il Personal Access Token come password
 - Dopo il primo push, `git push` e `git pull` funzioneranno automaticamente
 
 
