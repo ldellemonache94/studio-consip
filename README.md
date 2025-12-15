@@ -1,5 +1,7 @@
 # Studio Consip
+
 Repo per studiare comandi GIT
+
 ```markdown
 # Setup Repository - README.md
 
@@ -13,7 +15,8 @@ git clone git@github.com:tuo-utente/tuo-repo.git
 ```
 
 **Opzione HTTPS:**
-```bash
+
+```
 git clone https://github.com/tuo-utente/tuo-repo.git
 ```
 
@@ -40,6 +43,5 @@ git push -u origin feature/nome-branch  # Pusha e configura tracking
 - Per SSH: configura chiave SSH in GitHub Settings > SSH keys
 - Per HTTPS: usa Personal Access Token come password
 - Dopo il primo push, `git push` e `git pull` funzioneranno automaticamente
-```
 
 
