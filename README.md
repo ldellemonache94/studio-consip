@@ -41,7 +41,3 @@ git push -u origin feature/nome-branch  # Pusha e configura tracking
 - Per HTTPS: usa Personal Access Token come password
 - Dopo il primo push, `git push` e `git pull` funzioneranno automaticamente
 ```
-
-Copia e incolla questo contenuto nel file `README.md` del tuo repository GitHub![1]
-
-[1](https://www.perplexity.ai/search/4d14bc5f-3cdf-40e4-9920-443c1995d51e)
