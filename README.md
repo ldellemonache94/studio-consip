@@ -17,22 +17,28 @@ Questo repository contiene lo script di inizializzazione `inizio.sh`. Segui ques
 ## 2. Clonare Repository Privato GitHub
 
 **Opzione SSH (raccomandata):**
+
+```bash
 git clone git@github.com:tuo-utente/tuo-repo.git
+```
 
 **Opzione HTTPS con PAT:**
-git clone https://github.com/tuo-utente/tuo-repo.git
-
+```bash
+[git clone https://github.com/tuo-utente/tuo-repo.git](https://github.com/ldellemonache94/studio-consip.git)
+```
 ```
 - Username: il tuo username GitHub
 - Password: incolla il PAT (non la password normale!)
 ```
 
 **Salva credenziali per sempre (opzionale):**
+```bash
 git config --global credential.helper store
+```
 
 ## 2. Permessi ed Esecuzione inizio.sh
 
-```
+```bash
 chmod +x inizio.sh          # Rendi eseguibile
 ls -l inizio.sh             # Verifica permessi (-rwxr-xr-x)
 ./inizio.sh                 # Esegui lo script
