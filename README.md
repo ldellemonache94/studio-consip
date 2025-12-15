@@ -19,12 +19,12 @@ Questo repository contiene lo script di inizializzazione `inizio.sh`. Segui ques
 **Opzione SSH (raccomandata):**
 
 ```bash
-git clone git@github.com:tuo-utente/tuo-repo.git
+git clone git@github.com:ldellemonache94/studio-consip.git
 ```
 
 **Opzione HTTPS con PAT:**
 ```bash
-[git clone https://github.com/tuo-utente/tuo-repo.git](https://github.com/ldellemonache94/studio-consip.git)
+git clone https://github.com/ldellemonache94/studio-consip.git
 ```
 ```
 - Username: il tuo username GitHub
