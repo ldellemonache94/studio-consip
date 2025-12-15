@@ -6,14 +6,29 @@ Repo per studiare comandi GIT
 
 Questo repository contiene lo script di inizializzazione `inizio.sh`. Segui questi passaggi per configurarlo.
 
-## 1. Clonare Repository Privato GitHub
+## 1. Creare Personal Access Token (PAT) su GitHub
+```
+1. Vai su GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic)
+2. Clicca "Generate new token (classic)"
+3. Seleziona scopes: `repo` (full access) 
+4. Copia il token generato (lo vedrai solo una volta!)
+```
 
-**Opzione cloning HTTPS:**
+## 2. Clonare Repository Privato GitHub
+
+**Opzione SSH (raccomandata):**
+git clone git@github.com:tuo-utente/tuo-repo.git
+
+**Opzione HTTPS con PAT:**
+git clone https://github.com/tuo-utente/tuo-repo.git
 
 ```
-git clone https://<nome_utente>@github.com/tuo-utente/tuo-repo.git
+- Username: il tuo username GitHub
+- Password: incolla il PAT (non la password normale!)
 ```
-### Vi verrà richiestra la password del vostro account per far partire il clone
+
+**Salva credenziali per sempre (opzionale):**
+git config --global credential.helper store
 
 ## 2. Permessi ed Esecuzione inizio.sh
 
