@@ -47,10 +47,10 @@ ls -l inizio.sh             # Verifica permessi (-rwxr-xr-x)
 ## 3. Creare e Pushare Nuovo Branch
 
 ```bash
-git checkout -b feature/nome-branch     # Crea e passa al branch
+git checkout -b feature/<tuo-nome>     # Crea e passa al branch
 git add .                               # Aggiungi modifiche
 git commit -m "Descrizione commit"      # Crea commit
-git push -u origin feature/nome-branch  # Pusha e configura tracking
+git push -u origin feature/<tuo-nome>  # Pusha e configura tracking
 ```
 
 ## Note Importanti
@@ -58,5 +58,3 @@ git push -u origin feature/nome-branch  # Pusha e configura tracking
 - Sostituisci `tuo-utente/tuo-repo.git` con l'URL reale
 - Per HTTPS: si può anche usare il Personal Access Token come password
 - Dopo il primo push, `git push` e `git pull` funzioneranno automaticamente
-
-
