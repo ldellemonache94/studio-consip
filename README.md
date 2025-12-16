@@ -16,13 +16,13 @@ Questo repository contiene lo script di inizializzazione `inizio.sh`. Segui ques
 
 ## 2. Clonare Repository Privato GitHub
 
-**Opzione SSH (raccomandata):**
+**Opzione SSH (non utilizzare):**
 
 ```bash
 git clone git@github.com:ldellemonache94/studio-consip.git
 ```
 
-**Opzione HTTPS con PAT:**
+**Opzione HTTPS con PAT (usate questo):**
 ```bash
 git clone https://github.com/ldellemonache94/studio-consip.git
 ```
