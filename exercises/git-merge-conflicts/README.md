@@ -32,7 +32,7 @@ Questo esercizio ha lo scopo di fornire le basi per:
 ## Struttura della cartella
 
 ```
-exercises/05-git-merge-conflicts/
+exercises/git-merge-conflicts/
 ├── README.md
 ├── file.txt
 ```
