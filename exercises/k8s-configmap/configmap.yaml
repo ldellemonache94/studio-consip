@@ -1,0 +1,8 @@
+kind: ConfigMap
+nome: app-config
+namespace: default
+data:
+  APP_NAME: "sample-app"
+  APP_ENV: "dev"
+  LOG_LEVEL: "info:
+  
