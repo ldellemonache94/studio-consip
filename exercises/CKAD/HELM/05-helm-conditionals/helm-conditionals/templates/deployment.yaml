@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "helm-conditionals.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "helm-conditionals.labels" . | nindent 4 }}
+  annotations:
+    # range su mappa: $key e $val iterano su ogni coppia chiave:valore
+    {{- range $key, $val := .Values.annotations }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+spec:
+  # Se HPA è abilitato NON settiamo replicas: ci pensa l'HPA
+  # Se HPA è disabilitato usiamo il valore da values.yaml
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "helm-conditionals.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "helm-conditionals.labels" . | nindent 8 }}
+    spec:
+      containers:
+      - name: webapp
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - containerPort: {{ .Values.service.targetPort }}
+        # range su lista di oggetti: . diventa ogni elemento della lista
+        env:
+        {{- range .Values.envVars }}
+        - name: {{ .name }}
+          value: {{ .value | quote }}
+        {{- end }}
+        # with cambia lo scope: dentro il blocco "." è .Values.resources
+        # Il blocco viene skippato se .Values.resources è nil/empty
+        {{- with .Values.resources }}
+        resources:
+          requests:
+            memory: {{ .requests.memory | quote }}
+            cpu: {{ .requests.cpu | quote }}
+          limits:
+            memory: {{ .limits.memory | quote }}
+            cpu: {{ .limits.cpu | quote }}
+        {{- end }}

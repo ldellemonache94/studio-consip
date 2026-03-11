@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "helm-advanced.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "helm-advanced.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "helm-advanced.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "helm-advanced.labels" . | nindent 8 }}
+    spec:
+      containers:
+      - name: webapp
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - containerPort: {{ .Values.service.targetPort }}
+        env:
+        - name: MESSAGE
+          valueFrom:
+            configMapKeyRef:
+              name: {{ include "helm-advanced.fullname" . }}-config
+              key: APP_MESSAGE
+        - name: LOG_LEVEL
+          valueFrom:
+            configMapKeyRef:
+              name: {{ include "helm-advanced.fullname" . }}-config
+              key: LOG_LEVEL
+        - name: SECRET_PASS
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "helm-advanced.fullname" . }}-secret
+              key: APP_PASSWORD
+        {{- with .Values.resources }}
+        resources:
+          requests:
+            memory: {{ .requests.memory | quote }}
+            cpu: {{ .requests.cpu | quote }}
+          limits:
+            memory: {{ .limits.memory | quote }}
+            cpu: {{ .limits.cpu | quote }}
+        {{- end }}
+        {{- with .Values.probes }}
+        livenessProbe:
+          httpGet:
+            path: {{ .liveness.path }}
+            port: {{ $.Values.service.targetPort }}
+          initialDelaySeconds: {{ .liveness.initialDelaySeconds }}
+          periodSeconds: {{ .liveness.periodSeconds }}
+        readinessProbe:
+          httpGet:
+            path: {{ .readiness.path }}
+            port: {{ $.Values.service.targetPort }}
+          initialDelaySeconds: {{ .readiness.initialDelaySeconds }}
+          periodSeconds: {{ .readiness.periodSeconds }}
+        {{- end }}

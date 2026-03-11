@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  # include richiama il named template "helm-helpers.fullname"
+  # passando "." (contesto corrente con .Values, .Release, .Chart)
+  name: {{ include "helm-helpers.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    # nindent 4 = newline + 4 spazi: necessario per allineare le label sotto "labels:"
+    {{- include "helm-helpers.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      # selectorLabels: solo label stabili e immutabili
+      {{- include "helm-helpers.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "helm-helpers.labels" . | nindent 8 }}
+    spec:
+      containers:
+      - name: webapp
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - containerPort: {{ .Values.service.targetPort }}
+        resources:
+          requests:
+            memory: {{ .Values.resources.requests.memory | quote }}
+            cpu: {{ .Values.resources.requests.cpu | quote }}
+          limits:
+            memory: {{ .Values.resources.limits.memory | quote }}
+            cpu: {{ .Values.resources.limits.cpu | quote }}

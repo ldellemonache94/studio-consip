@@ -1,0 +1,6 @@
+apiVersion: v2
+name: helm-conditionals
+description: Esercizio CKAD 5 - Condizionali, range e with
+type: application
+version: 0.1.0
+appVersion: "1.25"
