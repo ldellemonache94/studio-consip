@@ -1,0 +1,21 @@
+# Kubernetes locali
+*.log
+*.tmp
+kubeconfig*
+minikube-*
+
+# IDE/editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS/WSL
+.DS_Store
+Thumbs.db
+
+# YAML temporanei
+*-backup.yaml
+
+# Docker (se buildi local)
+*.dockerignore
