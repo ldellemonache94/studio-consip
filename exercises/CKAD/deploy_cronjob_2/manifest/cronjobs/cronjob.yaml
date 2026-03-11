@@ -1,0 +1,29 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: log-writer
+spec:
+  schedule: "*/2 * * * *"  # Ogni 2 minuti
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          initContainers:
+          - name: volume-init
+            image: busybox:1.36
+            command: ['sh', '-c', 'echo "=== CKAD Log Init $(date) ===" > /data/output.log || true']
+            volumeMounts:
+            - name: log-volume
+              mountPath: /data
+          containers:
+          - name: logger
+            image: busybox:1.36
+            command: ['sh', '-c', 'echo "$(date): CKAD CronJob run" >> /data/output.log && sleep 10']
+            volumeMounts:
+            - name: log-volume
+              mountPath: /data
+          restartPolicy: OnFailure
+          volumes:
+          - name: log-volume
+            persistentVolumeClaim:
+              claimName: ckad-logs-pvc
