@@ -1,0 +1,72 @@
+# 1. Deny-all ingress sul namespace db
+# podSelector: {} = si applica a TUTTI i pod nel namespace
+# Nessuna regola ingress = blocca tutto il traffico in entrata
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: db-deny-all
+  namespace: ckad-db
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+---
+# 2. Permetti solo al backend di raggiungere il db
+# namespaceSelector: seleziona il namespace ckad-backend tramite label
+# podSelector: seleziona solo i pod con label app: backend
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: db-allow-backend
+  namespace: ckad-db
+spec:
+  podSelector:
+    matchLabels:
+      app: db
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          role: backend
+      podSelector:
+        matchLabels:
+          app: backend
+    ports:
+    - protocol: TCP
+      port: 80
+---
+# 3. Backend: deny-all + permetti solo frontend
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: backend-deny-all
+  namespace: ckad-backend
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: backend-allow-frontend
+  namespace: ckad-backend
+spec:
+  podSelector:
+    matchLabels:
+      app: backend
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          role: frontend
+      podSelector:
+        matchLabels:
+          app: frontend
+    ports:
+    - protocol: TCP
+      port: 80

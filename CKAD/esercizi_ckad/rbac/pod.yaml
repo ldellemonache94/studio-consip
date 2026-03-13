@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: app-reader-pod
+  namespace: ckad-rbac
+spec:
+  # Monta automaticamente il token del ServiceAccount app-reader
+  serviceAccountName: app-reader
+  containers:
+  - name: kubectl
+    # Immagine con kubectl preinstallato per testare i permessi
+    image: bitnami/kubectl:latest
+    # Il pod rimane attivo per permettere exec
+    command: ["sleep", "3600"]

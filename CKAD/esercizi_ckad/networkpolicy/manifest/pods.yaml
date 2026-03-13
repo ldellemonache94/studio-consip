@@ -1,0 +1,83 @@
+# Pod frontend
+apiVersion: v1
+kind: Pod
+metadata:
+  name: frontend
+  namespace: ckad-frontend
+  labels:
+    app: frontend
+spec:
+  containers:
+  - name: frontend
+    image: nginx:1.25-alpine
+    ports:
+    - containerPort: 80
+---
+# Service frontend
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  namespace: ckad-frontend
+spec:
+  selector:
+    app: frontend
+  ports:
+  - port: 80
+    targetPort: 80
+---
+# Pod backend
+apiVersion: v1
+kind: Pod
+metadata:
+  name: backend
+  namespace: ckad-backend
+  labels:
+    app: backend
+spec:
+  containers:
+  - name: backend
+    image: nginx:1.25-alpine
+    ports:
+    - containerPort: 80
+---
+# Service backend
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+  namespace: ckad-backend
+spec:
+  selector:
+    app: backend
+  ports:
+  - port: 80
+    targetPort: 80
+---
+# Pod db
+apiVersion: v1
+kind: Pod
+metadata:
+  name: db
+  namespace: ckad-db
+  labels:
+    app: db
+spec:
+  containers:
+  - name: db
+    image: nginx:1.25-alpine
+    ports:
+    - containerPort: 80
+---
+# Service db
+apiVersion: v1
+kind: Service
+metadata:
+  name: db
+  namespace: ckad-db
+spec:
+  selector:
+    app: db
+  ports:
+  - port: 80
+    targetPort: 80

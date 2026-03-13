@@ -1,0 +1,15 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: pod-configmap-reader
+  namespace: ckad-rbac
+rules:
+  # Permette lettura dei pod
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "list", "watch"]
+  # Permette lettura e scrittura dei configmap
+- apiGroups: [""]
+  resources: ["configmaps"]
+  verbs: ["get", "list", "create", "update", "patch", "delete"]
+  # Secret: non inclusi → accesso negato per default
