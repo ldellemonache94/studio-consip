@@ -21,21 +21,6 @@ Non è un esame a risposta multipla: è **100% pratico**, tutto da terminale.
 
 ---
 
-## Dettagli Esame
-
-| Parametro              | Valore                                      |
-|------------------------|---------------------------------------------|
-| **Durata**             | 2 ore (120 minuti)                          |
-| **Numero domande**     | 15–20 task pratici                          |
-| **Punteggio minimo**   | 66% per passare                             |
-| **Formato**            | Performance-based (solo CLI + YAML)         |
-| **Modalità**           | Online, proctored (webcam + schermo)        |
-| **Costo**              | $445 USD (include un retake gratuito)       |
-| **Validità**           | 2 anni dalla data di superamento            |
-| **Documenti aperti**   | kubernetes.io/docs (1 tab browser)          |
-| **Linguaggio**         | Inglese                                     |
-
----
 
 ## Domini e Pesi
 
