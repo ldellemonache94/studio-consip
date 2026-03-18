@@ -1,0 +1,13 @@
+https://www.youtube.com/watch?v=Sqsz1-o7nXk
+
+https://www.youtube.com/watch?v=WQXtpIDs9UQ
+
+https://www.youtube.com/watch?v=vw-2U0u7Ni4
+
+https://stackoverflow.com/questions/24852116/what-exactly-is-a-merge-conflict
+
+https://www.atlassian.com/git/tutorials/using-branches/merge-conflicts
+
+https://imagej.net/develop/git/conflicts
+
+https://www.cloudthat.com/resources/blog/git-best-practices-managing-merge-conflicts
