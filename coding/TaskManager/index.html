@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Task Manager</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>📝 Task Manager</h1>
+
+    <div class="input-group">
+      <input type="text" id="taskInput" placeholder="Aggiungi una nuova task..." />
+      <select id="prioritySelect">
+        <option value="low">🟢 Bassa</option>
+        <option value="medium" selected>🟡 Media</option>
+        <option value="high">🔴 Alta</option>
+      </select>
+      <button id="addBtn">Aggiungi</button>
+    </div>
+
+    <div class="filters">
+      <button class="filter-btn active" data-filter="all">Tutte</button>
+      <button class="filter-btn" data-filter="pending">In corso</button>
+      <button class="filter-btn" data-filter="completed">Completate</button>
+    </div>
+
+    <ul id="taskList"></ul>
+
+    <div class="footer">
+      <span id="taskCount">0 task rimanenti</span>
+      <button id="clearCompleted">Rimuovi completate</button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
