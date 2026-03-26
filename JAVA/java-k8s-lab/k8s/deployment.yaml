@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mem-test-1
+  namespace: jvm-lab
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mem-test-1
+  template:
+    metadata:
+      labels:
+        app: mem-test-1
+    spec:
+      containers:
+        - name: app
+          image: memory-eater:latest
+          resources:
+            requests:
+              memory: "256Mi"
+            limits:
+              memory: "512Mi"

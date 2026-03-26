@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: memory-eater
+  template:
+    metadata:
+      labels:
+        app: memory-eater
+    spec:
+      containers:
+        - name: app
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          command: ["java"]
+          args:
+            - {{ .Values.javaOpts | quote }}
+            - MemoryEater
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}

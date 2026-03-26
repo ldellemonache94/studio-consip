@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mem-test-shenandoah
+  namespace: jvm-lab
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mem-test-shenandoah
+  template:
+    metadata:
+      labels:
+        app: mem-test-shenandoah
+    spec:
+      containers:
+        - name: app
+          image: memory-eater:latest
+          command: ["java"]
+          args:
+            [
+              "-Xms128m",
+              "-Xmx256m",
+              "-XX:+UseShenandoahGC",
+              "-Xlog:gc*",
+              "MemoryEater"
+            ]
+          resources:
+            limits:
+              memory: "512Mi"
