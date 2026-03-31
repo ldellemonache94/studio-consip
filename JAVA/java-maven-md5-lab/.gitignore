@@ -1,0 +1,16 @@
+# Maven
+target/
+*.class
+
+# Mantieni i file MD5 generati dall'esercizio
+!build-v1.md5
+!build-v2.md5
+!last-build.md5
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/
