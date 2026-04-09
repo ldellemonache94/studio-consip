@@ -72,7 +72,7 @@ git push origin rc/v1.0.0-<tuo-nome> --force-with-lease  # Sicuro per team, stud
 | Vantaggio | Beneficio |
 |-----------|-----------|
 | **Commit ELIMINATO** | Storia pulita |
-| **MD5 IDENTICO** | ✅ Deploy prod OK |
+| **MD5 IDENTICO** | Deploy prod OK |
 | **Merge pulito** | Solo codice buono su `master` |
 | **Facile da leggere** | Team capisce subito |
 
