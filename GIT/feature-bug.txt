@@ -1,0 +1,4 @@
+# FEATURE SBAGLIATA - NON va in produzione!
+Questo file rappresenta una feature incompleta o errata.
+Se presente nel branch RC, il deploy su PROD fallirebbe i controlli.
+MD5 di questo file: d41d8cd98f00b204e9800998ecf8427e
