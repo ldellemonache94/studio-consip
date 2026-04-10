@@ -1,3 +1,1 @@
-# Codice base dell'applicazione
-Versione 1.0.0 - Pronto per produzione
-Questo è il codice principale che deve andare in PROD.
+versione base app
