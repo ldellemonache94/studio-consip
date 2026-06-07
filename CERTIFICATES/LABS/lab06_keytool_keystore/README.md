@@ -14,7 +14,6 @@ Usare `keytool` per creare keystore e truststore, generare una CSR, importare CA
 - `openssl` per firmare la CSR
 
 ## Passi
-
 1. Genera keypair nel keystore PKCS12
 2. Crea CSR dal keystore
 3. Firma la CSR con openssl (CA locale)

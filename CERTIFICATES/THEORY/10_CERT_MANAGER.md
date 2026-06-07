@@ -34,7 +34,7 @@ metadata:
   namespace: default
 spec:
   ca:
-    secretName: ca-key-pair  # Secret che contiene ca.crt e ca.key
+    secretName: ca-key-pair
 ```
 
 ### ClusterIssuer
@@ -67,13 +67,9 @@ spec:
   dnsNames:
     - myapp.example.com
     - myapp.default.svc.cluster.local
-  duration: 2160h     # 90 giorni
-  renewBefore: 360h   # rinnova 15 giorni prima
+  duration: 2160h
+  renewBefore: 360h
 ```
-
-### CertificateRequest
-Risorsa di basso livello, creata automaticamente da `Certificate`.
-Di solito non la gestisci a mano.
 
 ---
 
@@ -102,14 +98,9 @@ Il pod che monta il Secret **non si riavvia automaticamente**: usa
 ## Verifica
 
 ```bash
-# Stato dei certificati
 kubectl get certificate -A
 kubectl describe certificate myapp-cert
-
-# Dettagli del Secret TLS generato
 kubectl get secret myapp-tls -o jsonpath='{.data.tls\.crt}' | base64 -d | openssl x509 -text -noout
-
-# Forza rinnovo immediato
 cmctl renew myapp-cert
 ```
 
@@ -126,7 +117,7 @@ metadata:
 spec:
   selfSigned: {}
 ---
-# 2. Certificate per la CA (CA:TRUE)
+# 2. Certificate per la CA (isCA: true)
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:

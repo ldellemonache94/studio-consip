@@ -13,21 +13,12 @@ Costruire una catena di trust a **3 livelli**: Root CA → Intermediate CA → L
 - `openssl` installato
 - Aver completato lab01-03
 
-## Struttura file
-```
-lab04_intermediate_ca/
-├── README.md
-├── solution.sh
-└── verify.sh
-```
-
 ## Passi
-
-1. Crea Root CA (self-signed, CA:TRUE, pathlen=1)
-2. Crea Intermediate CA (firmata dalla Root CA, CA:TRUE, pathlen=0)
+1. Crea Root CA (self-signed, CA:TRUE, pathlen:1)
+2. Crea Intermediate CA (firmata dalla Root CA, CA:TRUE, pathlen:0)
 3. Crea chiave e CSR per il server
 4. Firma la CSR con l'Intermediate CA
-5. Costruisci la chain file: `cat server.crt intermediate.crt > chain.pem`
+5. Costruisci il chain file: `cat server.crt intermediate.crt > chain.pem`
 6. Verifica la chain completa
 
 ## Deliverable attesi
@@ -39,9 +30,9 @@ chain.pem
 ```
 
 ## Errori comuni
-- Dimenticare `pathlen:0` sull'Intermediate (permetterebbe di firmare altre CA)
+- Dimenticare `pathlen:0` sull'Intermediate
 - Verificare solo con la Root CA senza passare l'Intermediate come `-untrusted`
-- Non includere i SAN nel server cert → rifiutato dai browser/Go moderni
+- Non includere i SAN nel server cert
 
 ## Cosa hai imparato
 - Root CA non emette mai leaf direttamente in produzione

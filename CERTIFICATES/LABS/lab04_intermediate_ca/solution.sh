@@ -12,7 +12,7 @@ openssl req -x509 -new -nodes \
   -sha256 -days 3650 \
   -subj "/CN=Root CA/O=Lab/C=IT" \
   -extensions v3_ca \
-  -config <(cat /etc/ssl/openssl.cnf; echo '[v3_ca]\nbasicConstraints=CA:TRUE,pathlen:1\nkeyUsage=keyCertSign,cRLSign') \
+  -config <(cat /etc/ssl/openssl.cnf; printf '[v3_ca]\nbasicConstraints=CA:TRUE,pathlen:1\nkeyUsage=keyCertSign,cRLSign') \
   -out root-ca.crt
 
 # 2. Intermediate CA
@@ -26,7 +26,7 @@ openssl x509 -req \
   -CA root-ca.crt -CAkey root-ca.key -CAcreateserial \
   -sha256 -days 1825 \
   -extensions v3_intermediate_ca \
-  -extfile <(echo '[v3_intermediate_ca]\nbasicConstraints=CA:TRUE,pathlen:0\nkeyUsage=keyCertSign,cRLSign\nsubjectKeyIdentifier=hash\nauthorityKeyIdentifier=keyid') \
+  -extfile <(printf '[v3_intermediate_ca]\nbasicConstraints=CA:TRUE,pathlen:0\nkeyUsage=keyCertSign,cRLSign\nsubjectKeyIdentifier=hash\nauthorityKeyIdentifier=keyid') \
   -out intermediate-ca.crt
 
 # 3. Server cert con SAN
@@ -40,7 +40,7 @@ openssl x509 -req \
   -CA intermediate-ca.crt -CAkey intermediate-ca.key -CAcreateserial \
   -sha256 -days 365 \
   -extensions v3_server \
-  -extfile <(echo '[v3_server]\nbasicConstraints=CA:FALSE\nkeyUsage=digitalSignature,keyEncipherment\nextendedKeyUsage=serverAuth\nsubjectAltName=DNS:server.example.com,DNS:localhost') \
+  -extfile <(printf '[v3_server]\nbasicConstraints=CA:FALSE\nkeyUsage=digitalSignature,keyEncipherment\nextendedKeyUsage=serverAuth\nsubjectAltName=DNS:server.example.com,DNS:localhost') \
   -out server.crt
 
 # 4. Chain file

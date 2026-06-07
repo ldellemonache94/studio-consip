@@ -26,5 +26,5 @@ Percorso pratico progressivo.
 ## Prerequisiti tecnici
 - `openssl` installato
 - `keytool` (JDK)
-- `kubectl` + cluster Kubernetes (Kind o minikube vanno bene)
+- `kubectl` + cluster Kubernetes (Kind o minikube)
 - `cert-manager` installato nel cluster per lab09

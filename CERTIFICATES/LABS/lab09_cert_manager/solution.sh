@@ -31,7 +31,6 @@ spec:
   renewBefore: 720h
 EOF
 
-# Aspetta CA pronta
 kubectl wait --for=condition=Ready certificate/internal-ca -n cert-manager --timeout=60s
 
 # 3. ClusterIssuer che usa la CA interna
@@ -65,9 +64,10 @@ spec:
   renewBefore: 360h
 EOF
 
-# Aspetta cert pronto
 kubectl wait --for=condition=Ready certificate/myapp-cert -n $NS --timeout=60s
 
 # 5. Verifica
 echo '--- Certificato emesso ---'
-kubectl get secret myapp-tls -n $NS -o jsonpath='{.data.tls\.crt}' | base64 -d | openssl x509 -text -noout | grep -E 'Subject:|DNS:|Not After:'
+kubectl get secret myapp-tls -n $NS \
+  -o jsonpath='{.data.tls\.crt}' | base64 -d | \
+  openssl x509 -text -noout | grep -E 'Subject:|DNS:|Not After:'

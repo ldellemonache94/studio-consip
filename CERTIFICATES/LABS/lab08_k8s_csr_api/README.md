@@ -14,15 +14,14 @@ Usare la Certificates API di Kubernetes per emettere un certificato firmato dall
 - `openssl` installato
 
 ## Passi
-
 1. Genera chiave RSA
 2. Genera CSR PKCS#10
 3. Crea la risorsa `CertificateSigningRequest` in Kubernetes
-4. Approva la richiesta con `kubectl certificate approve`
+4. Approva con `kubectl certificate approve`
 5. Scarica il certificato da `status.certificate`
 6. Verifica il certificato
 
 ## Errori comuni
 - `signerName` sbagliato → signer non firma
 - Base64 della CSR con newline → errore di parsing
-- Non avere i permessi per approvare → configura RBAC
+- Permessi insufficienti per approvare → verifica RBAC

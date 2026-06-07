@@ -31,8 +31,6 @@ Default path: `/etc/kubernetes/pki/`
 
 ## CA separate
 
-Kubernetes usa CA **separate** per isolare i domini di trust:
-
 | CA | Protegge |
 |----|----------|
 | `ca` | cluster generale (apiserver, kubelet, controller-manager, scheduler) |
@@ -45,10 +43,10 @@ Kubernetes usa CA **separate** per isolare i domini di trust:
 
 ## Componenti e certificati
 
-| Componente | Ruolo cert | SAN obbligatori |
-|------------|------------|-----------------|
-| kube-apiserver | server | `kubernetes`, `kubernetes.default`, `kubernetes.default.svc`, IP del master |
-| kubelet | client verso apiserver | CN=`system:node:<nodename>`, O=`system:nodes` |
+| Componente | Ruolo cert | SAN / CN obbligatori |
+|------------|------------|----------------------|
+| kube-apiserver | server | `kubernetes`, `kubernetes.default`, IP master |
+| kubelet | client | CN=`system:node:<nodename>`, O=`system:nodes` |
 | controller-manager | client | CN=`system:kube-controller-manager` |
 | scheduler | client | CN=`system:kube-scheduler` |
 | etcd | server + peer + client | IP di tutti i nodi etcd |
@@ -100,7 +98,8 @@ users:
 
 Decodifica rapida:
 ```bash
-kubectl config view --raw | grep client-certificate-data | awk '{print $2}' | base64 -d | openssl x509 -text -noout
+kubectl config view --raw | grep client-certificate-data | \
+  awk '{print $2}' | base64 -d | openssl x509 -text -noout
 ```
 
 ---

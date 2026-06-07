@@ -50,7 +50,7 @@ openssl req -new -key myapp.key \
   -subj "/CN=myapp/O=myteam" \
   -out myapp.csr
 
-# 3. Codifica in base64
+# 3. Codifica in base64 (senza newline)
 CSR_B64=$(cat myapp.csr | base64 | tr -d '\n')
 
 # 4. Crea la risorsa CertificateSigningRequest
@@ -81,20 +81,17 @@ openssl x509 -in myapp.crt -text -noout
 
 ## Stato della CSR
 
-```bash
-kubectl get csr
-# NAME        AGE   SIGNERNAME                            REQUESTOR   REQUESTEDDURATION   CONDITION
-# myapp-csr   10s   kubernetes.io/kube-apiserver-client   admin       24h                 Pending
-
-kubectl describe csr myapp-csr
-```
-
 | Condition | Significato |
 |-----------|-------------|
 | Pending | in attesa di approvazione |
 | Approved | approvata, in attesa di firma |
 | Denied | rifiutata |
 | Failed | errore durante la firma |
+
+```bash
+kubectl get csr
+kubectl describe csr myapp-csr
+```
 
 ---
 

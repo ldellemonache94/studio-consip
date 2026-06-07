@@ -15,9 +15,7 @@ openssl req -x509 -new -nodes -key ca.key -sha256 -days 3650 \
 # 2. Keypair nel keystore PKCS12
 keytool -genkeypair \
   -alias myapp \
-  -keyalg RSA \
-  -keysize 2048 \
-  -validity 365 \
+  -keyalg RSA -keysize 2048 -validity 365 \
   -dname "CN=myapp.example.com, O=Lab, C=IT" \
   -keystore myapp.p12 -storetype PKCS12 \
   -storepass "$PASS" -keypass "$PASS"
@@ -31,7 +29,7 @@ openssl x509 -req -in myapp.csr \
   -CA ca.crt -CAkey ca.key -CAcreateserial \
   -sha256 -days 365 \
   -extensions v3_ext \
-  -extfile <(echo '[v3_ext]\nsubjectAltName=DNS:myapp.example.com\nextendedKeyUsage=serverAuth') \
+  -extfile <(printf '[v3_ext]\nsubjectAltName=DNS:myapp.example.com\nextendedKeyUsage=serverAuth') \
   -out myapp-signed.crt
 
 # 5. Truststore: importa CA
@@ -39,7 +37,7 @@ keytool -importcert -alias local-ca -file ca.crt \
   -keystore truststore.p12 -storetype PKCS12 \
   -storepass "$PASS" -noprompt
 
-# 6. Keystore: importa CA (necessario prima del cert firmato)
+# 6. Keystore: importa CA prima del cert firmato
 keytool -importcert -alias local-ca -file ca.crt \
   -keystore myapp.p12 -storetype PKCS12 \
   -storepass "$PASS" -noprompt
@@ -49,7 +47,7 @@ keytool -importcert -alias myapp -file myapp-signed.crt \
   -keystore myapp.p12 -storetype PKCS12 \
   -storepass "$PASS" -noprompt
 
-# 8. Lista
+# 8. Verifica
 echo '--- Keystore ---'
 keytool -list -v -keystore myapp.p12 -storetype PKCS12 -storepass "$PASS"
 echo '--- Truststore ---'

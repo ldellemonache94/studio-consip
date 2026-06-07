@@ -15,7 +15,7 @@ openssl req -new -key myapp.key \
   -subj "/CN=myapp/O=labteam" \
   -out myapp.csr
 
-# 3. Codifica base64 senza newline
+# 3. Base64 senza newline
 CSR_B64=$(base64 < myapp.csr | tr -d '\n')
 
 # 4. Crea risorsa CertificateSigningRequest
@@ -37,20 +37,18 @@ EOF
 # 5. Approva
 kubectl certificate approve "$CSR_NAME"
 
-# 6. Aspetta la firma
+# 6. Attendi firma e scarica
 for i in $(seq 1 10); do
-  STATUS=$(kubectl get csr "$CSR_NAME" -o jsonpath='{.status.conditions[0].type}' 2>/dev/null || echo '')
   CERT=$(kubectl get csr "$CSR_NAME" -o jsonpath='{.status.certificate}' 2>/dev/null || echo '')
   [ -n "$CERT" ] && break
   echo "Attendo firma... ($i/10)"
   sleep 2
 done
 
-# 7. Scarica certificato
 kubectl get csr "$CSR_NAME" -o jsonpath='{.status.certificate}' | base64 -d > myapp.crt
 
-# 8. Verifica
+# 7. Verifica
 echo '--- Certificato ottenuto ---'
 openssl x509 -in myapp.crt -text -noout | grep -E 'Subject:|Not Before:|Not After:'
 
-echo "\nFile generati in: $WORKDIR"
+echo "\nFile in: $WORKDIR"

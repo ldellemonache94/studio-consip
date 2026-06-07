@@ -15,7 +15,7 @@ Usato per decidere di quali CA ci si fida quando si riceve un certificato.
 ### Formati
 | Formato | Estensione | Note |
 |---------|------------|------|
-| JKS (Java KeyStore) | `.jks` | Proprietario Java, deprecato |
+| JKS | `.jks` | Proprietario Java, deprecato |
 | PKCS12 | `.p12` / `.pfx` | Standard, preferibile da Java 9+ |
 | PEM | `.crt`, `.key` | Testo base64, usato da openssl |
 | DER | `.der` | Binario, poco usato in Java |

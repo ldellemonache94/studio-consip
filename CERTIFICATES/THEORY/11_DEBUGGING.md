@@ -17,7 +17,7 @@ Seguire sempre questo ordine:
 
 ## Errori comuni → causa → fix
 
-### identity problems
+### Identity problems
 
 | Errore | Causa | Fix |
 |--------|-------|-----|
@@ -25,37 +25,36 @@ Seguire sempre questo ordine:
 | `x509: certificate relies on legacy Common Name field` | SAN mancante (Go 1.15+) | aggiungi SAN al cert |
 | `SSL: no alternative certificate subject name matches` | SAN non copre l'hostname | aggiungi hostname/IP tra i SAN |
 
-### trust problems
+### Trust problems
 
 | Errore | Causa | Fix |
 |--------|-------|-----|
 | `x509: certificate signed by unknown authority` | CA non nel trust store | importa la CA nel trust store |
 | `unable to get local issuer certificate` | chain incompleta | invia l'intermediate con il server cert |
-| `certificate verify failed (unable to get issuer cert)` | issuer mancante | serve la chain completa |
+| `certificate verify failed` | issuer mancante | serve la chain completa |
 | `self-signed certificate in certificate chain` | self-signed non trusted | aggiungi la CA al trust store |
 
-### validity problems
+### Validity problems
 
 | Errore | Causa | Fix |
 |--------|-------|-----|
 | `certificate has expired or is not yet valid` | cert scaduto o data sistema errata | rinnova cert o correggi orologio |
 | `notBefore` nel futuro | cert non ancora valido | controlla il clock del sistema |
 
-### protocol / cipher problems
+### Protocol / cipher problems
 
 | Errore | Causa | Fix |
 |--------|-------|-----|
 | `wrong version number` | TLS version mismatch | allinea versioni TLS |
-| `no shared cipher` / `handshake failure` | cipher suite incompatibili | allinea cipher suite |
-| `tlsv1 alert protocol version` | client o server usa versione TLS non supportata | abilita versioni compatibili |
-| `SNI mismatch` | SNI assente o errato | passa `-servername` oppure configura SNI |
+| `no shared cipher` | cipher suite incompatibili | allinea cipher suite |
+| `tlsv1 alert protocol version` | versione TLS non supportata | abilita versioni compatibili |
 
 ### mTLS problems
 
 | Errore | Causa | Fix |
 |--------|-------|-----|
-| `tls: certificate required` | server richiede client cert ma non l'hai passato | passa `-cert` e `-key` |
-| `tls: bad certificate` | client cert non valido o firma non riconosciuta | verifica che la CA del client cert sia nel server trust store |
+| `tls: certificate required` | server richiede client cert non passato | passa `-cert` e `-key` |
+| `tls: bad certificate` | client cert non valido | verifica CA client nel server truststore |
 | `unknown ca` | CA del client cert non nel server truststore | importa CA client nel truststore server |
 
 ---
@@ -68,7 +67,8 @@ Seguire sempre questo ordine:
 openssl x509 -in server.crt -text -noout
 
 # Da server (senza file)
-echo | openssl s_client -connect api.example.com:443 -servername api.example.com 2>/dev/null | openssl x509 -text -noout
+echo | openssl s_client -connect api.example.com:443 -servername api.example.com 2>/dev/null \
+  | openssl x509 -text -noout
 
 # Solo date
 openssl x509 -in server.crt -dates -noout
@@ -85,15 +85,15 @@ openssl x509 -in server.crt -subject -issuer -noout
 # Solo leaf + root
 openssl verify -CAfile ca.crt server.crt
 
-# Leaf + intermediate + root
+# Con intermediate
 openssl verify -CAfile ca.crt -untrusted intermediate.crt server.crt
 
-# Con chain file (bundle)
-cat intermediate.crt ca.crt > chain-bundle.crt
-openssl verify -CAfile chain-bundle.crt server.crt
+# Chain bundle
+cat intermediate.crt ca.crt > bundle.crt
+openssl verify -CAfile bundle.crt server.crt
 ```
 
-### Test handshake TLS completo
+### Test handshake TLS
 ```bash
 # Base
 openssl s_client -connect api.example.com:443 -servername api.example.com
@@ -101,7 +101,7 @@ openssl s_client -connect api.example.com:443 -servername api.example.com
 # Mostra chain completa
 openssl s_client -connect api.example.com:443 -servername api.example.com -showcerts
 
-# Verifica ritorno errore
+# Errore esplicito
 openssl s_client -connect api.example.com:443 -servername api.example.com -verify_return_error
 
 # Forza TLS 1.2
@@ -110,30 +110,20 @@ openssl s_client -connect api.example.com:443 -tls1_2
 # mTLS: client si autentica
 openssl s_client -connect api.example.com:443 \
   -servername api.example.com \
-  -cert client.crt \
-  -key client.key \
-  -CAfile ca.crt
+  -cert client.crt -key client.key -CAfile ca.crt
 ```
 
-### Decodifica CSR
+### Verifica coppia chiave/cert
 ```bash
-openssl req -in myapp.csr -text -noout
+# I due hash devono essere uguali
+openssl x509 -in server.crt -noout -modulus | md5sum
+openssl rsa  -in server.key -noout -modulus | md5sum
 ```
 
-### Verifica certificato in un Secret Kubernetes
+### Verifica certificato in Secret Kubernetes
 ```bash
 kubectl get secret myapp-tls -o jsonpath='{.data.tls\.crt}' | base64 -d | openssl x509 -text -noout
-
-# Scadenza
 kubectl get secret myapp-tls -o jsonpath='{.data.tls\.crt}' | base64 -d | openssl x509 -dates -noout
-```
-
-### Check revoca CRL
-```bash
-# Scarica CRL da AIA del certificato
-CRL_URL=$(openssl x509 -in server.crt -noout -text | grep -A2 'CRL Distribution' | grep URI | sed 's/.*URI://')
-wget -q -O crl.der "$CRL_URL"
-openssl crl -inform DER -in crl.der -text -noout
 ```
 
 ---
@@ -144,13 +134,10 @@ openssl crl -inform DER -in crl.der -text -noout
 ```bash
 kubeadm certs check-expiration
 kubeadm certs renew all
-# Riavvia i componenti static pod
-kill -s SIGHUP $(pidof kube-apiserver)
 ```
 
-### Secret TLS errato
+### Secret TLS: chiave e cert non corrispondono
 ```bash
-# Verifica che tls.crt e tls.key siano coerenti
 kubectl get secret myapp-tls -o jsonpath='{.data.tls\.crt}' | base64 -d | openssl x509 -noout -modulus | md5sum
 kubectl get secret myapp-tls -o jsonpath='{.data.tls\.key}' | base64 -d | openssl rsa -noout -modulus | md5sum
 # I due hash devono essere uguali
@@ -166,7 +153,7 @@ kubectl logs -n cert-manager deployment/cert-manager
 ### CSR non approvata
 ```bash
 kubectl get csr
-kubectl describe csr myapp-csr  # leggi Events e Conditions
+kubectl describe csr myapp-csr
 kubectl certificate approve myapp-csr
 ```
 
@@ -175,15 +162,15 @@ kubectl certificate approve myapp-csr
 ## Checklist rapida
 
 ```
-[ ] Il cert è scaduto?         → openssl x509 -dates
-[ ] SAN copre l'hostname?      → openssl x509 -ext subjectAltName
-[ ] Chain completa?            → openssl verify -CAfile ca.crt -untrusted int.crt server.crt
-[ ] CA nel trust store?        → openssl s_client ... 2>&1 | grep 'Verify return code'
-[ ] Chiave e cert fanno coppia? → confronta moduli con md5sum
-[ ] TLS version OK?            → openssl s_client -tls1_2 / -tls1_3
-[ ] mTLS: client cert passato? → openssl s_client -cert -key -CAfile
-[ ] Kubernetes: Secret TLS OK? → kubectl get secret ... | base64 -d | openssl x509
-[ ] cert-manager: eventi OK?   → kubectl describe certificate
+[ ] Cert scaduto?              openssl x509 -dates -noout
+[ ] SAN copre l'hostname?      openssl x509 -ext subjectAltName -noout
+[ ] Chain completa?            openssl verify -CAfile ca.crt -untrusted int.crt server.crt
+[ ] CA nel trust store?        openssl s_client ... | grep 'Verify return code'
+[ ] Chiave e cert fanno coppia? confronta moduli con md5sum
+[ ] TLS version OK?            openssl s_client -tls1_2 / -tls1_3
+[ ] mTLS: client cert passato? openssl s_client -cert -key -CAfile
+[ ] K8s Secret TLS OK?         kubectl get secret | base64 -d | openssl x509
+[ ] cert-manager eventi OK?    kubectl describe certificate
 ```
 
 ---
@@ -194,4 +181,4 @@ kubectl certificate approve myapp-csr
 2. Quale errore indica che la CA non è nel trust store?
 3. Come verifichi che chiave privata e certificato facciano coppia?
 4. Come simuli un client mTLS con openssl?
-5. Come verifichi la scadenza di un certificato dentro un Secret Kubernetes?
+5. Come verifichi la scadenza di un cert dentro un Secret Kubernetes?

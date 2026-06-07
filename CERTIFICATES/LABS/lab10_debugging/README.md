@@ -3,16 +3,6 @@
 ## Obiettivo
 Riconoscere, diagnosticare e correggere i problemi TLS più comuni.
 
-## Concetti che impari
-- Metodo diagnostico sistematico
-- Come leggere gli errori TLS
-- Come usare `openssl` per isolare il problema
-- Pattern di fix per ogni categoria di errore
-
-## Prerequisiti
-- `openssl` installato
-- Aver completato lab01-09
-
 ## Scenari
 
 | Scenario | Errore simulato |
@@ -22,15 +12,22 @@ Riconoscere, diagnosticare e correggere i problemi TLS più comuni.
 | C | Chain incompleta (issuer sconosciuto) |
 | D | CA non nel trust store |
 | E | Chiave privata non corrisponde al certificato |
-| F | mTLS: client cert mancante |
 
 ## Come eseguire
 
 ```bash
-bash solution.sh setup    # genera gli scenari
-bash solution.sh debug A  # lavora sullo scenario A
-bash solution.sh debug B  # ...
-bash verify.sh            # verifica tutti gli scenari
+# Setup: genera tutti gli scenari
+bash solution.sh setup
+
+# Lavora su ogni scenario
+bash solution.sh debug A
+bash solution.sh debug B
+bash solution.sh debug C
+bash solution.sh debug D
+bash solution.sh debug E
+
+# Verifica il setup
+bash verify.sh
 ```
 
 ## Checklist diagnostica
@@ -39,6 +36,6 @@ bash verify.sh            # verifica tutti gli scenari
 [ ] openssl x509 -in cert.crt -dates -noout              → scaduto?
 [ ] openssl x509 -in cert.crt -ext subjectAltName -noout → SAN?
 [ ] openssl verify -CAfile ca.crt -untrusted int.crt leaf.crt → chain?
-[ ] confronta moduli chiave e cert con md5sum              → coppia?
-[ ] openssl s_client -connect host:port -servername host   → handshake?
+[ ] confronta moduli chiave e cert con md5sum             → coppia?
+[ ] openssl s_client -connect host:port -servername host  → handshake?
 ```
