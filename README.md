@@ -1,6 +1,4 @@
-# Studio Consip
-
-Repo per studiare comandi GIT
+# Repo per studiare il DevSecOps
 
 # Setup Repository - README.md
 
@@ -19,12 +17,12 @@ Questo repository contiene lo script di inizializzazione `inizio.sh`. Segui ques
 **Opzione SSH (non utilizzare):**
 
 ```bash
-git clone git@github.com:ldellemonache94/studio-consip.git
+git clone git@github.com:ldellemonache94/DevOpsKtHub.git
 ```
 
 **Opzione HTTPS con PAT (usate questo):**
 ```bash
-git clone https://github.com/ldellemonache94/studio-consip.git
+git clone https://github.com/ldellemonache94/DevOpsKtHub.git
 ```
 ```
 - Username: il tuo username GitHub
